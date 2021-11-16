@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.13.2",
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.0",
     "connect-flash": "^0.1.1",
     "dotenv": "^10.0.0",
@@ -17,6 +19,8 @@
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.17.1",
+    "geocoder": "^0.2.3",
+    "mapbox": "^1.0.0-beta10",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pg": "^8.4.2",
