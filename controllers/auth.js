@@ -4,6 +4,7 @@ const db = require('../models')
 const passport = require('../config/ppConfig.js')
 const axios = require('axios');
 require('dotenv').config()
+// MapBox API
 const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN;
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({ accessToken: MAPBOX_ACCESS_TOKEN });
@@ -14,19 +15,18 @@ router.get('/signup', (req, res)=>{
 })
 
 router.post('/signup', (req, res)=>{
-    // let gMapsGeocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?place_id=ChIJd8BlQ2BZwokRAFUEcm_qrcA&key=AIzaSyDwtXU_mM07mFyoc9e6X-EJ9655hNzGgog`
     // Use request to call the API
     const geocodeQuery = req.body.address
     geocodingClient.forwardGeocode({query: geocodeQuery})
     .send()
     .then(apiResponse => {
-        console.log('Lon: ',apiResponse.body.features[0].center[0])
-        console.log('Lat: ',apiResponse.body.features[0].center[1])
-        
+        // console.log('Lon: ',apiResponse.body.features[0].center[0])
+        // console.log('Lat: ',apiResponse.body.features[0].center[1])
         db.user.findOrCreate({
             where: {email: req.body.email},
             defaults: {
                 name: req.body.name,
+                phone: req.body.phone,
                 password: req.body.password,
                 latitude: apiResponse.body.features[0].center[1],
                 longitude: apiResponse.body.features[0].center[0]

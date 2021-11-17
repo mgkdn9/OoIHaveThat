@@ -22,3 +22,5 @@
 ## To Dos
 ### Connect to API
 ### Create TRDs
+### Put 'Rent a Tool' button on HomePage
+### Make RAT button take you to ToolRequestCreationPage

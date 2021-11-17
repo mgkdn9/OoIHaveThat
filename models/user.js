@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.user.hasMany(models.toolRequest)
     }
   };
   user.init({
@@ -23,6 +23,15 @@ module.exports = (sequelize, DataTypes) => {
         len: {
           args: [2, 25],
           msg: 'Name must be 2-25 characters long.'
+        }
+      }
+    },
+    phone: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: 'Only numeric values are allowed.'
         }
       }
     },

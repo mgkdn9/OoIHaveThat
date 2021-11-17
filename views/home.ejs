@@ -1,1 +1,37 @@
-<h2>Express Auth Boilerplate Home Page</h2>
+<% if(!currentUser){ %>
+  <h2>Showing all Tool Requests</h2>
+  <% users.forEach((user) => { %>
+    <div><%= user.name %></div>
+  <% }) %>
+<% } else { %>
+  <h3>Logged in as <%= currentUser.name %></h3>
+  <h2>Showing Closest Tool Requests</h2>
+  <% toolRequests.forEach(function(tR) { %>
+    <article>
+      <h3><%= tR.title %></h3>
+      <div style="display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+        <div>
+          <p>Created at:</p>
+          <p><%= tR.createdAt %></p>
+        </div>
+        <div>
+          <p>Need for:</p>
+          <p><%= tR.timeNeeded %></p>
+        </div>
+        <div>
+          <p>Offering:</p>
+          <p><%= tR.priceFirstOffer %></p>
+        </div>
+        <div>
+          <p>Located:</p>
+          <p><%= tR.userId %></p>
+          <p><%= tR.user.latitude %></p>
+        </div>
+        <div>
+          <p>Example Image:</p>
+          <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
+        </div>
+      </div>
+    </article>
+  <% }) %>
+<% } %>

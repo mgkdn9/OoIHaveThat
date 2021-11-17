@@ -6,7 +6,9 @@ const session = require('express-session')
 const passport = require('./config/ppConfig')
 const flash = require('connect-flash')
 const isLoggedIn = require('./middleware/isLoggedIn')
+let db = require('./models')
 
+//added to try to alter table
 
 // views (ejs and layouts) set up
 app.set('view engine', 'ejs')
@@ -39,11 +41,20 @@ app.use((req, res, next) => {
 
 // controllers middleware 
 app.use('/auth', require('./controllers/auth'))
-
+app.use('/toolRequest', require('./controllers/toolRequest'))
+app.use('/toolsDisplay', require('./controllers/toolsDisplay'))
 
 // home route
 app.get('/', (req, res)=>{
-    res.render('home')
+    db.user.findAll()
+    .then((users) => {
+        db.toolRequest.findAll({
+            include: [db.user]
+        })
+        .then((toolRequests) => {
+            res.render('home', {users, toolRequests})
+        })
+    })
 })
 
 // profile route
@@ -53,6 +64,5 @@ app.get('/profile', isLoggedIn, (req, res)=>{
 
 
 app.listen(3000, ()=>{
-    console.log('process.env.SUPER_SECRET_SECRET: ',process.env.SUPER_SECRET_SECRET)
     console.log("auth_practice running on port 3000")
 })
