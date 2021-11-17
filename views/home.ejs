@@ -7,31 +7,36 @@
   <h3>Logged in as <%= currentUser.name %></h3>
   <h2>Showing Closest Tool Requests</h2>
   <% toolRequests.forEach(function(tR) { %>
-    <article>
-      <h3><%= tR.title %></h3>
-      <div style="display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
-        <div>
-          <p>Created at:</p>
-          <p><%= tR.createdAt %></p>
+    <% if(!(currentUser.id===tR.user.id)) { %>
+      <article>
+        <h3><%= tR.title %></h3>
+        <div style="display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+          <div>
+            <p>User:</p>
+            <p><%= tR.user.name %></p>
+          </div><div>
+            <p>Created at:</p>
+            <p><%= tR.createdAt %></p>
+          </div>
+          <div>
+            <p>Need for:</p>
+            <p><%= tR.timeNeeded %></p>
+          </div>
+          <div>
+            <p>Offering:</p>
+            <p><%= tR.priceFirstOffer %></p>
+          </div>
+          <div>
+            <p>Located:</p>
+            <p><%= tR.user.latitude %></p>
+            <p><%= tR.user.longitude %></p>
+          </div>
+          <div>
+            <p>Example Image:</p>
+            <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
+          </div>
         </div>
-        <div>
-          <p>Need for:</p>
-          <p><%= tR.timeNeeded %></p>
-        </div>
-        <div>
-          <p>Offering:</p>
-          <p><%= tR.priceFirstOffer %></p>
-        </div>
-        <div>
-          <p>Located:</p>
-          <p><%= tR.userId %></p>
-          <p><%= tR.user.latitude %></p>
-        </div>
-        <div>
-          <p>Example Image:</p>
-          <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
-        </div>
-      </div>
-    </article>
+      </article>
+    <% } %>
   <% }) %>
 <% } %>
