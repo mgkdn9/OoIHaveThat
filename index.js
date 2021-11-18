@@ -7,12 +7,15 @@ const passport = require('./config/ppConfig')
 const flash = require('connect-flash')
 const isLoggedIn = require('./middleware/isLoggedIn')
 let db = require('./models')
+const methodOverride = require('method-override')
 
 //added to try to alter table
 
 // views (ejs and layouts) set up
 app.set('view engine', 'ejs')
 app.use(ejsLayouts)
+// method override allows you to override methods with a query parameter
+app.use(methodOverride('_method'))
 
 // body parser middelware
 app.use(express.urlencoded({extended:false}))
@@ -59,7 +62,15 @@ app.get('/', (req, res)=>{
 
 // profile route
 app.get('/profile', isLoggedIn, (req, res)=>{
-    res.render('profile')
+    db.user.findAll()
+    .then((users) => {
+        db.toolRequest.findAll({
+            include: [db.user]
+        })
+        .then((toolRequests) => {
+            res.render('profile', {users, toolRequests})
+        })
+    })
 })
 
 
