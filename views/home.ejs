@@ -4,39 +4,54 @@
     <div><%= user.name %></div>
   <% }) %>
 <% } else { %>
+<div style="background-color: whitesmoke;">
   <h3>Logged in as <%= currentUser.name %></h3>
   <h2>Showing Closest Tool Requests</h2>
-  <% toolRequests.forEach(function(tR) { %>
-    <% if(!(currentUser.id===tR.user.id)) { %>
-      <article>
-        <h3><%= tR.title %></h3>
-        <div style="display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
-          <div>
-            <p>User:</p>
-            <p><%= tR.user.name %></p>
-          </div><div>
-            <p>Created at:</p>
-            <p><%= tR.createdAt %></p>
-          </div>
-          <div>
-            <p>Need for:</p>
-            <p><%= tR.timeNeeded %></p>
-          </div>
-          <div>
-            <p>Offering:</p>
-            <p><%= tR.priceFirstOffer %></p>
-          </div>
-          <div>
-            <p>Located:</p>
-            <p><%= tR.user.latitude %></p>
-            <p><%= tR.user.longitude %></p>
-          </div>
-          <div>
-            <p>Example Image:</p>
-            <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
-          </div>
-        </div>
-      </article>
-    <% } %>
+  <% const sortedToolRequests = [] %>
+  <% let bufferObject, deltaLat, deltaLon, distance %>
+  <% toolRequests.forEach((tR,i) => { %>
+  <%  if(!(currentUser.id===tR.user.id)) { %>
+  <%   //calculate distance from currentUser to each toolRequest's user %>
+  <%   deltaLat = currentUser.latitude - tR.user.latitude %>
+  <%   deltaLon = currentUser.longitude - tR.user.longitude %>
+  <%   //distance = sqrt of sum of squares of differences between coordinates %>
+  <%   //1 degree of latitude is 69 miles, 1 degree of longitude is 54.6 miles %>
+  <%   distance = Math.sqrt(Math.pow(deltaLat*69,2) + Math.pow(deltaLon*54.6,2)).toFixed(3) %>
+  <%   bufferObject = {distance, title: tR.title, userName: tR.user.name, createdAt: tR.createdAt, timeNeeded: tR.timeNeeded, priceFirstOffer: tR.priceFirstOffer} %>
+  <%   //At this point, sortedToolRequests is not sorted, just doesn't include currentUser's toolRequests %>
+  <%   sortedToolRequests.push(bufferObject) %>
+  <%  } %>
   <% }) %>
+  <% sortedToolRequests.sort((a, b) => (a.distance > b.distance) ? 1 : -1) %>
+  <% sortedToolRequests.forEach(function(tR) { %>
+    <article>
+      <h3><%= tR.title %></h3>
+      <div style="background-color:azure; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+        <div>
+          <p>User:</p>
+          <p><%= tR.userName %></p>
+        </div><div>
+          <p>Created at:</p>
+          <p><%= tR.createdAt %></p>
+        </div>
+        <div>
+          <p>Need for:</p>
+          <p><%= tR.timeNeeded %></p>
+        </div>
+        <div>
+          <p>Offering:</p>
+          <p>$<%= tR.priceFirstOffer %></p>
+        </div>
+        <div>
+          <p>Located:</p>
+          <p><%= tR.distance %> miles away</p>
+        </div>
+        <div>
+          <p>Example Image:</p>
+          <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
+        </div>
+      </div>
+    </article>
+  <% }) %>
+</div>
 <% } %>

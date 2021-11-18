@@ -1,37 +1,42 @@
-<h2>Showing <%= currentUser.name %>'s Tool Requests</h2>
-<% toolRequests.forEach(function(tR) { %>
-  <% if((currentUser.id===tR.user.id)) { %>
-    <article>
-      <h3><%= tR.title %></h3>
-      <div style="display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
-        <div>
-          <p>User:</p>
-          <p><%= tR.user.name %></p>
-        </div><div>
-          <p>Created at:</p>
-          <p><%= tR.createdAt %></p>
+<div style="background-color: whitesmoke;">
+  <h2>Showing <%= currentUser.name %>'s Tool Requests</h2>
+  <% toolRequests.forEach(function(tR) { %>
+    <% if((currentUser.id===tR.user.id)) { %>
+      <article>
+        <h3><%= tR.title %></h3>
+        <div style="background-color:azure; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+          <div>
+            <p>User:</p>
+            <p><%= tR.user.name %></p>
+          </div><div>
+            <p>Created at:</p>
+            <p><%= tR.createdAt %></p>
+          </div>
+          <div>
+            <p>Need for:</p>
+            <p><%= tR.timeNeeded %></p>
+          </div>
+          <div>
+            <p>Offering:</p>
+            <p><%= tR.priceFirstOffer %></p>
+          </div>
+          <div>
+            <p>Located:</p>
+            <p><%= tR.user.latitude %></p>
+            <p><%= tR.user.longitude %></p>
+          </div>
+          <div>
+            <p>Example Image:</p>
+            <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
+          </div>
+          <form action="/toolRequest/<%= tR.id %>" method="GET">
+            <button class="btn btn-secondary" type="submit">Edit</button>
+          </form>
+          <form action="/toolRequest/<%= tR.id %>?_method=DELETE" method="POST">
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
         </div>
-        <div>
-          <p>Need for:</p>
-          <p><%= tR.timeNeeded %></p>
-        </div>
-        <div>
-          <p>Offering:</p>
-          <p><%= tR.priceFirstOffer %></p>
-        </div>
-        <div>
-          <p>Located:</p>
-          <p><%= tR.user.latitude %></p>
-          <p><%= tR.user.longitude %></p>
-        </div>
-        <div>
-          <p>Example Image:</p>
-          <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
-        </div>
-        <form action="/toolRequest/<%= tR.id %>?_method=DELETE" method="POST">
-          <button class="btn btn-danger" type="submit">Delete</button>
-        </form>
-      </div>
-    </article>
-  <% } %>
-<% }) %>
+      </article>
+    <% } %>
+  <% }) %>
+</div>

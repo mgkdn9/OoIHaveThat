@@ -1,0 +1,23 @@
+<h4>Adjust the tool: <strong><%= tool.title %></strong></h4>
+
+<form action="/toolRequest/<%= tool.id %>?_method=PUT" method="POST">
+  <label for="title">*Title:</label>
+  <input id="title" type="text" name="title" required value="<%= tool.title %>">
+  <br>
+
+  <label for="timeNeeded">Time Needed:</label>
+  <input id="timeNeeded" type="text" name="timeNeeded" value="<%= tool.timeNeeded %>">
+  <br>
+
+  <label for="priceFirstOffer">*First Offer Price:</label>
+  <input id="priceFirstOffer" type="text" name="priceFirstOffer" required value="<%= tool.priceFirstOffer %>">
+  <br>
+
+  <label for="pictureURL">Picture URL:</label>
+  <input id="pictureURL" type="text" name="pictureURL" value="<%= tool.pictureURL %>">
+  <br>
+
+  <!--DONT NEED <input type="text" name="userId" hidden value=" currentUser.id %>"> -->
+
+  <input type="submit">
+</form>

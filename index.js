@@ -8,6 +8,7 @@ const flash = require('connect-flash')
 const isLoggedIn = require('./middleware/isLoggedIn')
 let db = require('./models')
 const methodOverride = require('method-override')
+// let moment = require('moment') didn't get to work yet
 
 //added to try to alter table
 

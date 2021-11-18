@@ -3,27 +3,30 @@ const router = express.Router()
 const db = require('../models')
 
 router.get('/new', (req, res)=>{
+  //View for new toolRequests
   res.render('toolRequest/new')
 })
 
 router.post('/new', (req, res)=>{
+  
   db.toolRequest.create({
+    title:            req.body.title,
     timeNeeded:       req.body.timeNeeded,
     pictureURL:       req.body.pictureURL,
     userId:           req.body.userId,
     priceFirstOffer:  req.body.priceFirstOffer
   })
   .then((post) => {
-    res.redirect('/')
+    res.redirect('/profile')
   })
   .catch((error) => {
     console.log(error)
-    res.redirect('/')
+    res.redirect('/profile')
   })
 })
 
 router.delete('/:id', (req, res)=>{
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!this is the id:\n', req.params.id)
+  console.log('this is the id:\n', req.params.id)
   db.toolRequest.destroy({
     where: { id : req.params.id }
   })
@@ -35,6 +38,39 @@ router.delete('/:id', (req, res)=>{
   .catch(error => 
     console.error
     )
+})
+
+router.get('/:id', (req, res)=>{
+  const toolId = req.params.id
+  db.toolRequest.findOne({
+    where: {
+      id: toolId
+    }
+  })
+  .then(foundTool => {
+    console.log('This tool was selected for edit:\n',foundTool.dataValues)
+    res.render('toolRequest/edit',{tool: foundTool.dataValues})
+  })
+})
+
+router.put('/:id', (req, res)=>{
+  const toolId = req.params.id
+  db.toolRequest.findOne({
+    where: {
+      id: toolId
+    }
+  })
+  .then(foundTool => {
+    console.log('updating this tool (old values):\n',foundTool.dataValues)
+    foundTool.update({
+      title:            req.body.title,
+      timeNeeded:       req.body.timeNeeded,
+      pictureURL:       req.body.pictureURL,
+      // userId:           req.body.userId, DONT NEED
+      priceFirstOffer:  req.body.priceFirstOffer
+    })
+    res.redirect('/profile')
+  })
 })
 
 module.exports = router
