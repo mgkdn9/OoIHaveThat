@@ -53,15 +53,18 @@ router.get('/:id', (req, res)=>{
   })
 })
 
+//Edit buttons in profile take here
 router.put('/:id', (req, res)=>{
   const toolId = req.params.id
+  //Find the tool
   db.toolRequest.findOne({
     where: {
       id: toolId
     }
   })
   .then(foundTool => {
-    console.log('updating this tool (old values):\n',foundTool.dataValues)
+    // console.log('updating this tool (old values):\n',foundTool.dataValues)
+    //Update and take back to profile
     foundTool.update({
       title:            req.body.title,
       timeNeeded:       req.body.timeNeeded,
@@ -70,6 +73,20 @@ router.put('/:id', (req, res)=>{
       priceFirstOffer:  req.body.priceFirstOffer
     })
     res.redirect('/profile')
+  })
+})
+
+//Respond button on home page takes here
+router.get('/response/:id', (req, res) => {
+  const toolId = req.params.id
+  db.toolRequest.findOne({
+    where: {
+      id: toolId
+    }
+  })
+  .then(foundTool => {
+    console.log('This tool was selected for response:\n',foundTool.dataValues)
+    res.render('toolRequest/response',{tool: foundTool.dataValues})
   })
 })
 

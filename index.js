@@ -46,18 +46,16 @@ app.use((req, res, next) => {
 // controllers middleware 
 app.use('/auth', require('./controllers/auth'))
 app.use('/toolRequest', require('./controllers/toolRequest'))
-app.use('/toolsDisplay', require('./controllers/toolsDisplay'))
+//In another life I'm sure I'm more organized. But not this life.
+// app.use('/toolsDisplay', require('./controllers/toolsDisplay'))
 
 // home route
 app.get('/', (req, res)=>{
-    db.user.findAll()
-    .then((users) => {
-        db.toolRequest.findAll({
-            include: [db.user]
-        })
-        .then((toolRequests) => {
-            res.render('home', {users, toolRequests})
-        })
+    db.toolRequest.findAll({
+        include: [db.user]
+    })
+    .then((toolRequests) => {
+        res.render('home', {toolRequests})
     })
 })
 

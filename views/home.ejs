@@ -1,8 +1,5 @@
 <% if(!currentUser){ %>
-  <h2>Showing all Tool Requests</h2>
-  <% users.forEach((user) => { %>
-    <div><%= user.name %></div>
-  <% }) %>
+  <h2>Login or Signup!</h2>
 <% } else { %>
 <div style="background-color: whitesmoke;">
   <h3>Logged in as <%= currentUser.name %></h3>
@@ -17,7 +14,8 @@
   <%   //distance = sqrt of sum of squares of differences between coordinates %>
   <%   //1 degree of latitude is 69 miles, 1 degree of longitude is 54.6 miles %>
   <%   distance = Math.sqrt(Math.pow(deltaLat*69,2) + Math.pow(deltaLon*54.6,2)).toFixed(3) %>
-  <%   bufferObject = {distance, title: tR.title, userName: tR.user.name, createdAt: tR.createdAt, timeNeeded: tR.timeNeeded, priceFirstOffer: tR.priceFirstOffer} %>
+  <%   //Need to adjust objects to add distance property %>
+  <%   bufferObject = {distance, title: tR.title, userName: tR.user.name, createdAt: tR.createdAt, timeNeeded: tR.timeNeeded, priceFirstOffer: tR.priceFirstOffer, pictureURL: tR.pictureURL, id: tR.id} %>
   <%   //At this point, sortedToolRequests is not sorted, just doesn't include currentUser's toolRequests %>
   <%   sortedToolRequests.push(bufferObject) %>
   <%  } %>
@@ -49,6 +47,11 @@
         <div>
           <p>Example Image:</p>
           <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
+        </div>
+        <div>
+          <form action="/toolRequest/response/<%= tR.id %>" method="GET">
+            <button class="btn btn-primary" type="submit">Respond</button>
+          </form>
         </div>
       </div>
     </article>
