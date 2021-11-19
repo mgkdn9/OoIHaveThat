@@ -77,16 +77,37 @@ router.put('/:id', (req, res)=>{
 })
 
 //Respond button on home page takes here
-router.get('/response/:id', (req, res) => {
+router.get('/response/:id/:distance', (req, res) => {
   const toolId = req.params.id
+  const distance = req.params.distance
   db.toolRequest.findOne({
     where: {
       id: toolId
-    }
+    },
+    include: [db.user]
   })
   .then(foundTool => {
-    console.log('This tool was selected for response:\n',foundTool.dataValues)
-    res.render('toolRequest/response',{tool: foundTool.dataValues})
+    // console.log('This tool was selected for response:\n',foundTool.dataValues)
+    res.render('toolRequest/response',{tool: foundTool.dataValues, distance})
+  })
+})
+
+//Create new response when they hit 'Submit Response'
+router.post('/response/:toolId/:currentUserId', (req, res) => {
+  const toolId        = req.params.toolId
+  const currentUserId = req.params.currentUserId
+
+  db.response.create({
+    toolRequestId: toolId,
+    userId: currentUserId,
+    priceCounterOffer: req.body.priceCounterOffer
+  })
+  .then((post) => {
+    res.redirect('/profile')
+  })
+  .catch((error) => {
+    console.error
+    res.redirect('/profile')
   })
 })
 

@@ -1,1 +1,28 @@
-<h1>Happy Birthday!</h1>
+<h1><%= tool.title %></h1>
+<img src="<%= tool.pictureURL %>" alt="<%= tool.title %>" style="width: 200px;">
+<div style="background-color:azure; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+  <div>
+    <p>User:</p>
+    <p><%= tool.user.name %></p>
+  </div><div>
+    <p>Created at:</p>
+    <p><%= tool.createdAt %></p>
+  </div>
+  <div>
+    <p>Need for:</p>
+    <p><%= tool.timeNeeded %></p>
+  </div>
+  <div>
+    <p>Located:</p>
+    <p><%= distance %> miles away</p>
+  </div>
+  <div>
+    <p>Offering:</p>
+    <p>$<%= tool.priceFirstOffer %></p>
+  </div>
+</div>
+<form action="/toolRequest/response/<%= tool.id %>/<%= currentUser.id %>" method="POST">
+  <label for="priceCounterOffer">Counter Offer:</label>
+  <input type="text" id="priceCounterOffer" name="priceCounterOffer" value="<%= tool.priceFirstOffer %>">
+  <button class="btn btn-primary" type="submit">Submit Response</button>
+</form>
