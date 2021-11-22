@@ -46,8 +46,6 @@ app.use((req, res, next) => {
 // controllers middleware 
 app.use('/auth', require('./controllers/auth'))
 app.use('/toolRequest', require('./controllers/toolRequest'))
-//In another life I'm sure I'm more organized. But not this life.
-// app.use('/toolsDisplay', require('./controllers/toolsDisplay'))
 
 // home route
 app.get('/', (req, res)=>{
