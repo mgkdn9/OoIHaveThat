@@ -25,3 +25,20 @@
 
 ### Prostitution would most certainly become a problem.
 ### As the site scales, a proportionally large team of lawyers/admins would be required to deal with claims of lost/stolen/broken tools.
+
+# To host this app locally:
+### Need MapBox Access Token saved in .env as MAPBOX_ACCESS_TOKEN
+### Node packages to install:
+### 1. @mapbox/mapbox-sdk
+### 2. bcrypt
+### 3. dotenv
+### 4. ejs
+### 5. express
+### 6. express-ejs-layouts
+### 7. geocoder
+### 8. method-override
+### 9. passport
+### 10. passport-local
+### 11. pg
+### 12. sequelize
+### Note: install node packages by installing node globally then running 'npm i <packageName>'

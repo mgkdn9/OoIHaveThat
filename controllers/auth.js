@@ -19,9 +19,8 @@ router.post('/signup', (req, res)=>{
     const geocodeQuery = req.body.address
     geocodingClient.forwardGeocode({query: geocodeQuery})
     .send()
+    //apiResponse contains latitude and longitude for the provided address
     .then(apiResponse => {
-        // console.log('Lon: ',apiResponse.body.features[0].center[0])
-        // console.log('Lat: ',apiResponse.body.features[0].center[1])
         db.user.findOrCreate({
             where: {email: req.body.email},
             defaults: {
@@ -53,10 +52,12 @@ router.post('/signup', (req, res)=>{
     })
 })
 
+//Render login page
 router.get('/login', (req, res)=>{
     res.render('auth/login')
 })
 
+//Log the user in
 router.post('/login', passport.authenticate('local', {
         failureRedirect: '/auth/login',
         successRedirect: '/', // !-> FLASH <-!
@@ -65,6 +66,7 @@ router.post('/login', passport.authenticate('local', {
     })
 )
 
+//Log the user out
 router.get('/logout', (req, res)=>{
     req.logout() // !-> FLASH <-!
     req.flash('Success! You\'re logged out.')

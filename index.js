@@ -49,6 +49,7 @@ app.use('/toolRequest', require('./controllers/toolRequest'))
 
 // home route
 app.get('/', (req, res)=>{
+    //Get all tool requests to display on Home page. In home.ejs we sort out tool requests made by currentUser to not show those.
     db.toolRequest.findAll({
         include: [db.user]
     })
@@ -69,7 +70,6 @@ app.get('/profile', isLoggedIn, (req, res)=>{
         })
         .then((myToolRequests) => {
             //Find all the responses made by the user to tool requests made by other users
-            // console.log('This is myToolRequests[0]:\n',myToolRequests[0])
             db.response.findAll({
                 where: {userId: req.user.id},
                 include: [db.toolRequest]

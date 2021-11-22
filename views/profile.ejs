@@ -118,7 +118,6 @@
                     <!-- This is definitely not how it's supposed to be done... -->
                     <% users.forEach(user => { %>
                       <% if(user.id===response.userId) { %>
-                        <!-- <p><strong>%= user.phone %></strong></p> -->
                         <p><strong><%= "("+user.phone.slice(0,3)+")"+user.phone.slice(3,6)+"-"+user.phone.slice(6,15) %></strong></p>
                       <% } %>
                     <% }) %>

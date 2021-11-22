@@ -7,8 +7,8 @@ router.get('/new', (req, res)=>{
   res.render('toolRequest/new')
 })
 
+//Insert new toolRequests into db
 router.post('/new', (req, res)=>{
-  
   db.toolRequest.create({
     title:            req.body.title,
     timeNeeded:       req.body.timeNeeded,
@@ -25,14 +25,13 @@ router.post('/new', (req, res)=>{
   })
 })
 
+//Delete a toolRequest from profile page
 router.delete('/:id', (req, res)=>{
-  // console.log('this is the id:\n', req.params.id)
   db.toolRequest.destroy({
     where: { id : req.params.id }
   })
   .then(deletedItem => {
     //destroy() returns 1 if deleted, 0 if nothing
-    // console.log('you deleted: ',deletedItem)
     res.redirect('/profile')
   })
   .catch(error => 
@@ -40,6 +39,7 @@ router.delete('/:id', (req, res)=>{
     )
 })
 
+//Render Edit toolRequest page
 router.get('/:id', (req, res)=>{
   const toolId = req.params.id
   db.toolRequest.findOne({
@@ -48,12 +48,11 @@ router.get('/:id', (req, res)=>{
     }
   })
   .then(foundTool => {
-    console.log('This tool was selected for edit:\n',foundTool.dataValues)
     res.render('toolRequest/edit',{tool: foundTool.dataValues})
   })
 })
 
-//Edit buttons in profile take here
+//Edit buttons in profile page take here
 router.put('/:id', (req, res)=>{
   const toolId = req.params.id
   //Find the tool
@@ -63,13 +62,11 @@ router.put('/:id', (req, res)=>{
     }
   })
   .then(foundTool => {
-    // console.log('updating this tool (old values):\n',foundTool.dataValues)
     //Update and take back to profile
     foundTool.update({
       title:            req.body.title,
       timeNeeded:       req.body.timeNeeded,
       pictureURL:       req.body.pictureURL,
-      // userId:           req.body.userId, DONT NEED
       priceFirstOffer:  req.body.priceFirstOffer
     })
     res.redirect('/profile')
@@ -87,7 +84,6 @@ router.get('/response/:id/:distance', (req, res) => {
     include: [db.user]
   })
   .then(foundTool => {
-    // console.log('This tool was selected for response:\n',foundTool.dataValues)
     res.render('toolRequest/response',{tool: foundTool.dataValues, distance})
   })
 })
