@@ -12,7 +12,9 @@
 </head>
 <body>
     <header style="background-color: whitesmoke;">
-      <a href="/toolRequest/new"><button class="btn" style="width: 50vw;height:70px;font-size:xx-large;" id="rat">Rent a Tool!</button></a>
+      <% if (currentUser) { %>
+        <a href="/toolRequest/new"><button class="btn" style="width: 50vw;height:70px;font-size:xx-large;" id="rat">Rent a Tool!</button></a>
+      <% } %>
         <nav>
             <ul>
               <li><a href="/">Home</a></li>
