@@ -26,7 +26,7 @@ router.post('/new', (req, res)=>{
 })
 
 router.delete('/:id', (req, res)=>{
-  console.log('this is the id:\n', req.params.id)
+  // console.log('this is the id:\n', req.params.id)
   db.toolRequest.destroy({
     where: { id : req.params.id }
   })
@@ -109,6 +109,19 @@ router.post('/response/:toolId/:currentUserId', (req, res) => {
     console.error
     res.redirect('/profile')
   })
+})
+
+//Delete response when they hit 'Delete Response'
+router.delete('/response/:id', (req, res)=>{
+  db.response.destroy({
+    where: { id : req.params.id }
+  })
+  .then(deletedItem => {
+    res.redirect('/profile')
+  })
+  .catch(error => 
+    console.error
+    )
 })
 
 module.exports = router

@@ -61,13 +61,31 @@ app.get('/', (req, res)=>{
 
 // profile route
 app.get('/profile', isLoggedIn, (req, res)=>{
+    //Find all the users 
     db.user.findAll()
     .then((users) => {
+        //Find all the tool requests made by the user
         db.toolRequest.findAll({
+            where: {userId: req.user.id},
             include: [db.user]
         })
-        .then((toolRequests) => {
-            res.render('profile', {users, toolRequests})
+        .then((myToolRequests) => {
+            //Find all the responses made by the user to tool requests made by other users
+            // console.log('This is myToolRequests[0]:\n',myToolRequests[0])
+            db.response.findAll({
+                where: {userId: req.user.id},
+                include: [db.toolRequest]
+            })
+            .then((myResponses) => {
+                //Find all responses made by other users to my tool requests
+                db.response.findAll({
+                    //Yes, there should be a where here. But couldn't figure it out because couldn't include user in toolRequest which is included in response. Almost any TA could elaborate further...
+                    include: [db.toolRequest]
+                })
+                .then(theirResponses => {
+                    res.render('profile', {users, myToolRequests, myResponses, theirResponses})
+                })
+            })
         })
     })
 })

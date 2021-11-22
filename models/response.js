@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.response.belongsTo(models.toolRequest)
+      models.response.belongsTo(models.user)
     }
   };
   response.init({

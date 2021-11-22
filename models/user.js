@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.user.hasMany(models.toolRequest)
+      models.user.hasMany(models.response)
     }
   };
   user.init({
