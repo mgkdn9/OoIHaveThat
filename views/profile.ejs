@@ -1,47 +1,52 @@
 <div style="background-color:beige;">
   <h2>Showing <%= currentUser.name %>'s Responses to Other users' Tool Requests</h2>
   <% if(myResponses[0]) { %>
-    <% myResponses.forEach(function(response,i) {//console.log('!!!!!!!!!!!!this is user:\n',myResponses[0].toolRequest.dataValues) %>
-      <article>
-        <h3><%= response.toolRequest.title %></h3>
-        <div style="background-color:cornsilk; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
-          <div>
-            <p>User who made toolRequest:</p>
-            <!-- This is definitely not how it's supposed to be done... -->
-            <% users.forEach(user => { %>
-              <% if(user.id===response.toolRequest.userId) { %>
-                <p><strong><%= user.name %></strong></p>
-              <% } %>
-            <% }) %>
-            <!-- This was the goal: -->
-            <!-- <p>%= response.toolRequest.user.name %></p> -->
-            <!-- I could have done it by adding a second user's FK to db.response but even that doesn't seem right -->
+    <% myResponses.forEach(function(response,i) {console.log('This is response:\n', response) %>
+      <!-- Check for Tool Request Deletion -->
+      <% if(!response.toolRequest) { %>
+        <h3>This Tool Request has been deleted by the Requester</h3>
+      <% } else { %>
+        <article>
+          <h3><%= response.toolRequest.title %></h3>
+          <div style="background-color:cornsilk; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+            <div>
+              <p>User who made toolRequest:</p>
+              <!-- This is definitely not how it's supposed to be done... -->
+              <% users.forEach(user => { %>
+                <% if(user.id===response.toolRequest.userId) { %>
+                  <p><strong><%= user.name %></strong></p>
+                <% } %>
+              <% }) %>
+              <!-- This was the goal: -->
+              <!-- <p>%= response.toolRequest.user.name %></p> -->
+              <!-- I could have done it by adding a second user's FK to db.response but even that doesn't seem right -->
+            </div>
+            <div>
+              <p>Tool Request Created at:</p>
+              <p><%= response.toolRequest.createdAt %></p>
+              <p>Tool Request Response Created at:</p>
+              <p><%= response.createdAt %></p>
+            </div>
+            <div>
+              <p>Need for:</p>
+              <p><strong><%= response.toolRequest.timeNeeded %></strong></p>
+            </div>
+            <div>
+              <p>Originally offerred:</p>
+              <p><strong>$<%= response.toolRequest.priceFirstOffer %></strong></p>
+              <p>CounterOffering:</p>
+              <p><strong>$<%= response.priceCounterOffer %></strong></p>
+            </div>
+            <div>
+              <p>Example Image:</p>
+              <img src="<%= response.toolRequest.pictureURL %>" alt="<%= response.toolRequest.title %>" style="width: 200px;">
+            </div>
+            <form action="/toolRequest/response/<%= response.id %>?_method=DELETE" method="POST">
+              <button class="btn btn-danger" type="submit">Delete Response</button>
+            </form>
           </div>
-          <div>
-            <p>Tool Request Created at:</p>
-            <p><%= response.toolRequest.createdAt %></p>
-            <p>Tool Request Response Created at:</p>
-            <p><%= response.createdAt %></p>
-          </div>
-          <div>
-            <p>Need for:</p>
-            <p><strong><%= response.toolRequest.timeNeeded %></strong></p>
-          </div>
-          <div>
-            <p>Originally offerred:</p>
-            <p><strong>$<%= response.toolRequest.priceFirstOffer %></strong></p>
-            <p>CounterOffering:</p>
-            <p><strong>$<%= response.priceCounterOffer %></strong></p>
-          </div>
-          <div>
-            <p>Example Image:</p>
-            <img src="<%= response.toolRequest.pictureURL %>" alt="<%= response.toolRequest.title %>" style="width: 200px;">
-          </div>
-          <form action="/toolRequest/response/<%= response.id %>?_method=DELETE" method="POST">
-            <button class="btn btn-danger" type="submit">Delete Response</button>
-          </form>
-        </div>
-      </article>
+        </article>
+      <% } %>
     <% }) %>
   <% } else { %>
     <h3>None yet! Go to the Home page and Respond to other people's Tool Requests.</h3>
@@ -50,83 +55,85 @@
 
 <div style="background-color:whitesmoke;">
   <h2>Showing <%= currentUser.name %>'s Tool Requests</h2>
-  <% myToolRequests.forEach(function(tR) { %>
-    <% if((currentUser.id===tR.user.id)) {//This if stmt not necessary idt %>
-      <div style="display: flex; flex-direction: column;">
-        <article>
-          <h3><%= tR.title %></h3>
-          <div style="background-color:azure; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
-            <div>
-              <p>Created at:</p>
-              <p><%= tR.createdAt %></p>
-            </div>
-            <div>
-              <p>Need for:</p>
-              <p><strong><%= tR.timeNeeded %></strong></p>
-            </div>
-            <div>
-              <p>Offering:</p>
-              <p><strong><%= tR.priceFirstOffer %></strong></p>
-            </div>
-            <div>
-              <p>Example Image:</p>
-              <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
-            </div>
-            <div>
-              <form action="/toolRequest/<%= tR.id %>" method="GET">
-                <button class="btn btn-secondary" type="submit">Edit Request</button>
-              </form>
-              <br>
-              <form action="/toolRequest/<%= tR.id %>?_method=DELETE" method="POST">
-                <button class="btn btn-danger" type="submit">Delete Request</button>
-              </form>
-            </div>
-          </div>
-        </article>
-        <article>
-          <h4>Responses to <%= tR.title %>:</h4>
-          <% let responseCounter = 0 %>
-          <% theirResponses.forEach(response => { %>
-            <% if(tR.id===response.toolRequestId) { %>
-              <% responseCounter++ %>
-              <div style="display: flex; gap: 15px;">
-                <div>
-                  <p>Respondent User:</p>
-                  <!-- This is definitely not how it's supposed to be done... -->
-                  <% users.forEach(user => { %>
-                    <% if(user.id===response.userId) { %>
-                      <p><strong><%= user.name %></strong></p>
-                    <% } %>
-                  <% }) %>
-                </div>
-                <div>
-                  <p>Response Created at:</p>
-                  <p><%= response.createdAt %></p>
-                </div>
-                <div>
-                  <p>CounterOffering:</p>
-                  <p><strong>$<%= response.priceCounterOffer %></strong></p>
-                </div>
-                <div>
-                  <p>Phone Number:</p>
-                  <!-- This is definitely not how it's supposed to be done... -->
-                  <% users.forEach(user => { %>
-                    <% if(user.id===response.userId) { %>
-                      <p><strong><%= user.phone %></strong></p>
-                    <% } %>
-                  <% }) %>
-                </div>
-                <!-- <form action="/toolRequest/response/<%= response.id %>" method="GET">
-                  <button class="btn btn-primary" type="submit">Respond to Response</button>
-                </form> -->
+  <% if(myToolRequests[0]) { %>
+    <% myToolRequests.forEach(function(tR) { %>
+      <% if((currentUser.id===tR.user.id)) {//This if stmt not necessary idt %>
+        <div style="display: flex; flex-direction: column;">
+          <article>
+            <h3><%= tR.title %></h3>
+            <div style="background-color:azure; display: flex; gap: 15px; border: 1px solid black; border-radius: 5px; margin: 0; padding: 5px;">
+              <div>
+                <p>Created at:</p>
+                <p><%= tR.createdAt %></p>
               </div>
-            <% } %>
-          <% }) %>
-          <% if(responseCounter===0) { %>
-            <h4>None yet!</h4>
-          <% } responseCounter = 0 %>
-        </article>
-      </div>
-    <% } %>
-  <% }) %>
+              <div>
+                <p>Need for:</p>
+                <p><strong><%= tR.timeNeeded %></strong></p>
+              </div>
+              <div>
+                <p>Offering:</p>
+                <p><strong><%= tR.priceFirstOffer %></strong></p>
+              </div>
+              <div>
+                <p>Example Image:</p>
+                <img src="<%= tR.pictureURL %>" alt="<%= tR.title %>" style="width: 200px;">
+              </div>
+              <div>
+                <form action="/toolRequest/<%= tR.id %>" method="GET">
+                  <button class="btn btn-secondary" type="submit">Edit Request</button>
+                </form>
+                <br>
+                <form action="/toolRequest/<%= tR.id %>?_method=DELETE" method="POST">
+                  <button class="btn btn-danger" type="submit">Delete Request</button>
+                </form>
+              </div>
+            </div>
+          </article>
+          <article>
+            <h4>Responses to <%= tR.title %>:</h4>
+            <% let responseCounter = 0 %>
+            <% theirResponses.forEach(response => { %>
+              <% if(tR.id===response.toolRequestId) { %>
+                <% responseCounter++ %>
+                <div style="display: flex; gap: 15px;">
+                  <div>
+                    <p>Respondent User:</p>
+                    <!-- This is definitely not how it's supposed to be done... -->
+                    <% users.forEach(user => { %>
+                      <% if(user.id===response.userId) { %>
+                        <p><strong><%= user.name %></strong></p>
+                      <% } %>
+                    <% }) %>
+                  </div>
+                  <div>
+                    <p>Response Created at:</p>
+                    <p><%= response.createdAt %></p>
+                  </div>
+                  <div>
+                    <p>CounterOffering:</p>
+                    <p><strong>$<%= response.priceCounterOffer %></strong></p>
+                  </div>
+                  <div>
+                    <p>Phone Number:</p>
+                    <!-- This is definitely not how it's supposed to be done... -->
+                    <% users.forEach(user => { %>
+                      <% if(user.id===response.userId) { %>
+                        <!-- <p><strong>%= user.phone %></strong></p> -->
+                        <p><strong><%= "("+user.phone.slice(0,3)+")"+user.phone.slice(3,6)+"-"+user.phone.slice(6,15) %></strong></p>
+                      <% } %>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+            <% }) %>
+            <% if(responseCounter===0) { %>
+              <h4>None yet! Check back later.</h4>
+            <% } responseCounter = 0 %>
+          </article>
+        </div>
+      <% } %>
+    <% }) %>
+  <% } else { %>
+    <h3>None yet! Click 'Rent a Tool' to post Tool Requests.</h3>
+  <% } %>
 </div>
